@@ -12,18 +12,18 @@ describe 'Hangman' do
   end
 
   it 'should have a random word with correct length' do
-    expect(@hangman.display.length >= 5 && @hangman.display.length <= 12).to eq(true)
+    expect(@hangman.word.length >= 5 && @hangman.word.length <= 12).to eq(true)
   end
 
   it 'should be able to test for lose' do
-    expect(@hangman.has_no_more_attempt?).to eq(false)
+    expect(@hangman.has_more_attempt?).to eq(true)
     guess_all_letters
-    expect(@hangman.has_no_more_attempt?).to eq(true)
+    expect(@hangman.has_more_attempt?).to eq(false)
   end
 
   it 'should be able to test for win' do
-    expect(@hangman.win?).to eq(false)
+    expect(@hangman.not_win?).to eq(true)
     guess_all_letters
-    expect(@hangman.win?).to eq(true)
+    expect(@hangman.not_win?).to eq(false)
   end
 end
