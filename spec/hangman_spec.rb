@@ -26,4 +26,30 @@ describe 'Hangman' do
     guess_all_letters
     expect(@hangman.not_win?).to eq(false)
   end
+
+  it 'should give an error for invalig JSON' do
+    content = "{ sdf }"
+    File.open('saved_game.json', 'w') do |f|
+      f.write(content)
+    end
+    res = @hangman.load
+    expect(res).to eq(1)
+  end
+
+  it 'should save and load state' do
+    @hangman.save
+    another_hangman = Hangman.new
+    res = another_hangman.load
+    expect(res).to eq(0)
+    expect(@hangman.to_s == another_hangman.to_s).to eq(true)
+  end
+
+  it 'should give an error at loading' do
+    File.delete('saved_game.json')
+    res = @hangman.load
+    expect(res).to eq(1)
+    @hangman.save
+  end
+
+
 end

@@ -1,3 +1,5 @@
+require 'json'
+
 class Hangman
   attr_reader :remaining_attempts, :word
 
@@ -31,6 +33,38 @@ class Hangman
         @word_mask[i] = letter.upcase if x == letter.upcase
       end
     end
+  end
+
+  def to_s
+    hash = {
+      'word_mask' => @word_mask.join(''),
+      'remaining_attempts' => @remaining_attempts,
+      'word' => @word.join(''),
+      'guessed_letters' => @guessed_letters
+    }
+    JSON.pretty_generate(hash)
+  end
+
+  def save
+    File.open('saved_game.json', 'w') do |f|
+      f.write(to_s)
+    end
+  end
+
+  def load
+    json = ''
+    File.open('saved_game.json', 'r') do |f|
+      json = f.read
+    end
+    hash = JSON.parse(json)
+  rescue StandardError
+    return 1
+  else
+    @word = hash['word'].split('')
+    @word_mask = hash['word_mask'].split('')
+    @remaining_attempts = hash['remaining_attempts']
+    @guessed_letters = hash['guessed_letters']
+    return 0
   end
 
   private
